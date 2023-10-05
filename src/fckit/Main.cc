@@ -23,6 +23,10 @@
 #include "eckit/thread/Once.h"
 #include "fckit/Log.h"
 
+#ifdef __NEC__
+  #define strsignal(signum) "TODO"
+#endif
+
 static eckit::Once<eckit::Mutex> local_mutex;
 
 using int32 = std::int32_t;
@@ -121,7 +125,7 @@ void fckit_terminate() {
 
     // Just in case we end up here, as last resort, exit immediately without
     // cleanup.
-    std::_Exit( EXIT_FAILURE );
+    std::exit( EXIT_FAILURE );
 }
 
 //------------------------------------------------------------------------------------------------------------------
@@ -150,7 +154,7 @@ void fckit_signal_handler( int32 signum ) {
     eckit::LibEcKit::instance().abort();
 
     // Just in case we end up here, which normally we shouldn't.
-    std::_Exit( EXIT_FAILURE );
+    std::exit( EXIT_FAILURE );
 }
 
 Signals& Signals::instance() {
